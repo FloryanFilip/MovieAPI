@@ -73,9 +73,10 @@ router.post('/',(req, res, next) => {
         });
 });
 
-router.get('/:productId', (req, res, next) => {
-    const id = req.params.productId;
+router.get('/:movieId', (req, res, next) => {
+    const id = req.params.movieId;
     Movie.findById(id)
+        .select('-__v')
         .exec()
         .then(doc => {
             console.log(doc);
