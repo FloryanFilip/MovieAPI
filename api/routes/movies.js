@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const request = require('sync-request');
+const omdbApi = 'http://www.omdbapi.com/?apikey=ada540bb&t=';
 
 const Movie = require('../models/movie');
 
@@ -20,7 +21,7 @@ router.get('/',(req, res, next) => {
                         Actors: doc.Actors,
                         request: {
                             type: 'GET',
-                            url: 'http://localhost:3000/movies/' + doc._id
+                            url: req.get('host') + '/movies/' + doc._id
                         }
                     }
                 })
@@ -36,7 +37,7 @@ router.get('/',(req, res, next) => {
 });
 
 router.post('/',(req, res, next) => {
-    let response = request('GET', 'http://www.omdbapi.com/?apikey=ada540bb&t=' + req.body.Title);
+    let response = request('GET', omdbApi + req.body.Title);
     let jsonObj = JSON.parse(response.getBody('utf8'));
     console.log(jsonObj);
     const movie = new Movie({
@@ -60,7 +61,7 @@ router.post('/',(req, res, next) => {
                     Actors: jsonObj.Actors,
                     request: {
                         type: 'GET',
-                        url: 'http://localhost:3000/movies/' + result._id
+                        url: req.get('host') + '/movies/' + result._id
                     }
                 }
             });
